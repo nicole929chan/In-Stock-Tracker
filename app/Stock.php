@@ -21,6 +21,10 @@ class Stock extends Model
     {
         $class = "App\\Clients\\" . Str::studly($this->retailer->name);
         
+        if (!class_exists($class)) {
+            throw new \Exception('Client not found for ' . $this->retailer->name);
+        }
+
         $status = (new $class)->checkAvailability($this);
         
         $this->update([
