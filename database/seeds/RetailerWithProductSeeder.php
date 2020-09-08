@@ -18,13 +18,11 @@ class RetailerWithProductSeeder extends Seeder
         $bestBuy = Retailer::create(['name' => 'Best Buy']);
 
         // 加入一筆庫存記錄, 但是狀態是缺貨.
-        $stock = new Stock([
+        $bestBuy->addStock($switch, new Stock([
             'price' => 10000,
             'url' => 'http://foo.com',
             'sku' => '12345',
             'in_stock' => false
-        ]);
-
-        $bestBuy->addStock($switch, $stock);
+        ]));
     }
 }

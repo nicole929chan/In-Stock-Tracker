@@ -2,8 +2,9 @@
 
 namespace App;
 
+use App\Clients\BestBuy;
+use App\Clients\Target;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Http;
 
 class Stock extends Model
 {
@@ -18,13 +19,17 @@ class Stock extends Model
     public function track()
     {
         if ($this->retailer->name == 'Best Buy') {
-            $results = Http::get('http:://foo.test')->json();
-
-            $this->update([
-                'price' => $results['price'],
-                'in_stock' => $results['available']
-            ]);
+            $results = (new BestBuy())->checkAvailability($this);
         }
+
+        if ($this->retailer->name == 'Target') {
+            $results = (new Target())->checkAvailability($this);
+        }
+
+        $this->update([
+            'price' => $results['price'],
+            'in_stock' => $results['available']
+        ]);
     }
 
     public function retailer()
