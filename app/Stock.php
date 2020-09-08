@@ -5,6 +5,7 @@ namespace App;
 use App\Clients\BestBuy;
 use App\Clients\Target;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Stock extends Model
 {
@@ -18,14 +19,10 @@ class Stock extends Model
 
     public function track()
     {
-        if ($this->retailer->name == 'Best Buy') {
-            $status = (new BestBuy())->checkAvailability($this);
-        }
-
-        if ($this->retailer->name == 'Target') {
-            $status = (new Target())->checkAvailability($this);
-        }
-
+        $class = "App\\Clients\\" . Str::studly($this->retailer->name);
+        
+        $status = (new $class)->checkAvailability($this);
+        
         $this->update([
             'price' => $status->price,
             'in_stock' => $status->available
