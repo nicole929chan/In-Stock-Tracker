@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Clients\ClientFactory;
+use Facades\App\Clients\ClientFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Retailer extends Model
@@ -11,7 +11,7 @@ class Retailer extends Model
 
     public function client()
     {
-        return (new ClientFactory)->make($this);
+        return ClientFactory::make($this);
     }
 
     public function addStock(Product $product, Stock $stock)
