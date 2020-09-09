@@ -3,9 +3,9 @@
 namespace App;
 
 use App\Clients\BestBuy;
+use App\Clients\ClientFactory;
 use App\Clients\Target;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Stock extends Model
 {
@@ -19,13 +19,9 @@ class Stock extends Model
 
     public function track()
     {
-        $class = "App\\Clients\\" . Str::studly($this->retailer->name);
-        
-        if (!class_exists($class)) {
-            throw new \Exception('Client not found for ' . $this->retailer->name);
-        }
+        $class = (new ClientFactory)->make($this->retailer);
 
-        $status = (new $class)->checkAvailability($this);
+        $status = $class->checkAvailability($this);
         
         $this->update([
             'price' => $status->price,
