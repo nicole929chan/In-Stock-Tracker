@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Clients\BestBuy;
-use App\Clients\ClientFactory;
 use App\Clients\Target;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,9 +18,7 @@ class Stock extends Model
 
     public function track()
     {
-        $class = (new ClientFactory)->make($this->retailer);
-
-        $status = $class->checkAvailability($this);
+        $status = $this->retailer->client()->checkAvailability($this);
         
         $this->update([
             'price' => $status->price,
