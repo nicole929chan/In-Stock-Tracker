@@ -16,4 +16,11 @@ class BestBuy implements Client
             $results['price']
         );
     }
+
+    protected function endpoint($sku)
+    {
+        $key = config('services.clients.bestBuy.key');
+
+        return "https://api.bestbuy.com/v1/products/{$sku}.json?apiKey={$key}";
+    }
 }
